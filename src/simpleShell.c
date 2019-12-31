@@ -4,9 +4,83 @@
 #include <string.h>
 #include <stdlib.h>
 
+int checkForFlags(char** ,int, int* ,int* , int* , int* );
+int removeFlags(char**,int);
 int commandParser(char *, char **, int,int*,int*,int*,int*);
 
 #define MAX_LINE		80 /* 80 chars per line, per command */
+
+int removeFlags(char** args,int argsNo) //to remove the flags from the arguments
+{
+	char *argsN[argsNo];
+	for (int i=0;i<argsNo;i++)
+	{
+		argsN[i]=NULL;
+	}
+	int j=0;
+	for(int i=0;i<argsNo;i++) //this loop to store only the arugments other than the flags
+	{
+		if(strcmp(args[i],"&")==0)
+		{
+			continue;
+		}
+		else if (strcmp(args[i],">")==0)
+		{
+			i++;
+			continue;
+		}
+		else if (strcmp(args[i],"<")==0)
+		{
+			i++;
+			continue;
+		}
+		else if(strcmp(args[i],"|")==0)
+		{
+			argsN[j++]=0;
+			continue;
+		}
+		else
+		{
+			argsN[j]= (char*) malloc(sizeof(args[i])); //memory allocation
+			strcpy(argsN[j++],args[i]);
+		}
+	}
+	for (int i=0;i<argsNo;i++) //to free the allocated memory
+	{
+		if(args[i])
+			free(args[i]);
+		args[i]=NULL;
+	}
+	for(int i=0;i<j;i++) //to set the values of the argument array to be equal to the new created array
+	{
+		args[i]=(char*) malloc(sizeof(argsN[i]));
+		strcpy(args[i],argsN[i]);
+	}
+}
+
+int checkForFlags(char** arguments,int a, int* conF,int* inpF, int* outpF, int* pipeF) //to set the values of the flags
+{
+	for (int i=0;i<a;i++)
+	{	
+		if(strcmp(arguments[i],"&")==0)
+		{
+			*conF=i; //the concurrency flag
+		}
+		else if (strcmp(arguments[i],">")==0)
+		{
+			*outpF=i; //to output redirection operator
+		}
+		else if (strcmp(arguments[i],"<")==0)
+		{
+			*inpF=i; //the input redirection operator
+		}
+		else if(strcmp(arguments[i],"|")==0)
+		{
+			*pipeF=i; //the pipe communication operator
+		}
+	}
+	return 0;
+}
 
 
 //a function to parse the user input and tokenize it
