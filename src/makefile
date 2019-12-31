@@ -1,2 +1,2 @@
 all:
-	gcc simple-shell-final.c -o shell.out
+	gcc simpleShell.c -o simpleShell.out
