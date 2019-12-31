@@ -7,8 +7,72 @@
 int checkForFlags(char** ,int, int* ,int* , int* , int* );
 int removeFlags(char**,int);
 int commandParser(char *, char **, int,int*,int*,int*,int*);
+int pipeComm(char **, int, int);
+
 
 #define MAX_LINE		80 /* 80 chars per line, per command */
+
+int pipeComm(char ** args, int argsNumber, int pipeF)
+{
+	int pid;
+	int fd[2];
+
+	if(pipe(fd)==-1)
+	{
+		printf("Error: Pipe Failed.\n");
+		return 1;
+	}
+	pid= fork();
+	if(pid<0)
+	{
+		printf("Error: Forking Failed.\n");
+		return 1;
+	}
+	else if (pid==0) //child
+	{
+		close(fd[0]);
+		int stdout = dup(STDOUT_FILENO);
+		dup2(fd[1],STDOUT_FILENO);
+		char* firstArgs[MAX_LINE/2+1]; //to store only the arguments of the child before the | symbol to be executed
+		for(int i = 0; i < MAX_LINE/2+1; i++)
+		{
+			firstArgs[i]=NULL;
+		}
+		for(int i = 0; i < pipeF; i++)
+		{
+			firstArgs[i] = (char*) malloc(sizeof(args[i]));
+			strcpy(firstArgs[i],args[i]);
+		}
+		//firstArgs[pipeF]=NULL;
+		execvp(firstArgs[0], firstArgs);
+
+		dup2(stdout,STDOUT_FILENO);
+		printf("Command Failed.\n");
+		return 1;
+	}
+	else //parent
+	{
+		close(fd[1]);
+		dup2(fd[0],STDIN_FILENO);
+		waitpid(pid, NULL, 0);
+
+		char* secondArgs[MAX_LINE/2+1];//to store only the arguments of the parent after the | symbol to be executed
+		for(int i = 0; i< MAX_LINE/2+1; i++)
+		{
+			secondArgs[i] = NULL;
+		}
+		for(int i = 0; i< argsNumber-pipeF-1; i++)
+		{
+			secondArgs[i] = (char*) malloc(sizeof(args[pipeF+i+1]));
+			strcpy(secondArgs[i],args[pipeF + i+1]);
+		}
+		//secondArgs[argsNumber-pipeF]=NULL;
+		execvp(secondArgs[0], secondArgs);
+		printf("Command Failed.\n");
+		return 1;
+	}
+	return 0;
+}
 
 int removeFlags(char** args,int argsNo) //to remove the flags from the arguments
 {
