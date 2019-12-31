@@ -51,7 +51,41 @@ int main(void)
 		}
 		else if (pid == 0) /*child process*/
 		{ 
-			// TODO: child should check for flags and execute the command
+			if(inpF>-1) //input redirection flag is part of the command
+			{
+				if(args[inpF+1]==0)
+				{	
+					printf("No file specified.\n");
+					return 1;
+				}
+				FILE* f= fopen(args[inpF+1],"r");
+				if(f==0)
+				{
+					printf("Couldn't open file.\n");
+					return 1;
+				}
+				int fno = fileno(f);
+				dup2(fno,STDIN_FILENO);
+			}
+			else if (outpF>-1) //output redirection flag is part of the command
+			{
+				if(args[outpF+1]==0)
+				{	
+					printf("No file specified.\n");
+					return 1;
+				}
+				FILE* f= fopen(args[outpF+1],"w");
+				int fno = fileno(f);
+				dup2(fno,STDOUT_FILENO);
+			}
+			else if (pipeF>-1) //pipe communication flag is part of the command
+			{
+				pipeComm(args, argNumber, pipeF); //call the pipe handling function
+				printf("Error Occured.\n");
+				return 1;
+			}
+			
+			// TODO: executing command
 		}
 		else if (pid > 0) { //parent process
 			if(conF==-1) //to apply concurrency in case the concurrency flag is set, namely an & at the end of the command
