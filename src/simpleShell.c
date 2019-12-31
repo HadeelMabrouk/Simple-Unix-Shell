@@ -12,6 +12,65 @@ int pipeComm(char **, int, int);
 
 #define MAX_LINE		80 /* 80 chars per line, per command */
 
+int main(void)
+{
+	char *args[MAX_LINE/2 + 1];	/* command line (of 80) has max of 40 arguments */
+    	char inputCommand[MAX_LINE]; /*a string to store the input command to be parsed in it*/
+	int should_run = 1; //to be equal to 1 as long as no exit command was inserted
+	int conF=-1,inpF=-1,outpF=-1,pipeF=-1;
+	
+	for(int i=0;i<MAX_LINE/2 + 1;i++)
+	{
+		args[i]=NULL;
+	}
+
+	int argNumber=-2;
+	pid_t pid;
+
+	while (should_run){   
+		printf("osh>");
+		fflush(stdout);
+				
+		fgets(inputCommand, MAX_LINE, stdin); //reads user input
+		argNumber = commandParser(inputCommand,args,argNumber,&conF,&inpF,&outpF,&pipeF);	
+		if(argNumber==-2)
+		{
+			continue;
+		}
+		if (strcmp(args[0],"exit")==0)
+		{
+			should_run=0;
+			continue;
+		}
+
+		pid = fork();
+		if (pid < 0) /* error occurred */
+		{
+			printf("Fork Failed\n");
+			return 1;
+		}
+		else if (pid == 0) /*child process*/
+		{ 
+			// TODO: child should check for flags and execute the command
+		}
+		else if (pid > 0) { //parent process
+			if(conF==-1) //to apply concurrency in case the concurrency flag is set, namely an & at the end of the command
+			{	
+				wait(NULL);
+				printf("Child Complete\n");
+			}
+		}
+		// reseting flags
+		conF=-1;
+		inpF=-1;
+		outpF=-1;
+		pipeF=-1;
+	}
+    
+	return 0;	
+}
+
+
 int pipeComm(char ** args, int argsNumber, int pipeF)
 {
 	int pid;
