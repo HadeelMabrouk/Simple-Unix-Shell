@@ -11,7 +11,7 @@ a C program that serves as a UNIX shell interface and supports concurrency, inpu
   * [Installation](#installation)
 * [Usage](#usage)
 * [License](#license)
-* [Contact](#contact)
+* [Contributors](#contributors)
 
 
 <!-- ABOUT THE PROJECT -->
@@ -24,14 +24,13 @@ for more, check `docs/report.pdf`
 
 
 ### Built With
-* C++
+* C
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
 * gcc
 ```sh
 sudo apt-get install gcc
@@ -43,7 +42,7 @@ sudo apt-get install gcc
 ```sh
 git clone https://github.com/HadeelMabrouk/Simple-Unix-Shell.git
 ```
-2. Run makefile by simply typing
+2. Run makefile by typing
 ```sh
 make
 ```
