@@ -85,7 +85,11 @@ int main(void)
 				return 1;
 			}
 			
-			// TODO: executing command
+			//executing command
+			removeFlags(args,argNumber); //to remove the flags arguments before execution
+			execvp(args[0],args);
+			printf("Command Failed\n");
+			return 1;
 		}
 		else if (pid > 0) { //parent process
 			if(conF==-1) //to apply concurrency in case the concurrency flag is set, namely an & at the end of the command
