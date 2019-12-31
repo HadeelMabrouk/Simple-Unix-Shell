@@ -41,7 +41,7 @@ sudo apt-get install gcc
 
 1. Clone the repo
 ```sh
-git clone https://github.com/your_username_/Project-Name.git
+git clone https://github.com/HadeelMabrouk/Simple-Unix-Shell.git
 ```
 2. Run makefile by simply typing
 ```sh
