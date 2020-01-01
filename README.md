@@ -20,6 +20,8 @@ a C program that serves as a UNIX shell interface and supports concurrency, inpu
 
 This project consists of designing a C program to serve as a shell interface that accepts user commands and then executes each command in a separate process. The project is meant to support creating the child process and executing the command in the child, providing a history feature, adding support of input and output redirection, and allowing the parent and child processes to communicate via a pipe.
 
+![Screenshot](screenshot.png)
+
 for more, check `docs/report.pdf`
 
 
