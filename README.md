@@ -11,7 +11,6 @@ a C program that serves as a UNIX shell interface and supports concurrency, inpu
   * [Installation](#installation)
 * [Usage](#usage)
 * [License](#license)
-* [Contributors](#contributors)
 
 
 <!-- ABOUT THE PROJECT -->
@@ -66,13 +65,3 @@ make
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-
-
-<!-- CONTRIBUTORS -->
-## Contributors  
-
-Ahmed Elkarashily  
-Hadeel Mabrouk
-
-Project Link: [https://github.com/HadeelMabrouk/Simple-Unix-Shell](https://github.com/HadeelMabrouk/Simple-Unix-Shell)
